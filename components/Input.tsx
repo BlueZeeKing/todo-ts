@@ -21,10 +21,10 @@ export default function Input(props) {
       <Head>
         <title>Todo.ts</title>
       </Head>
-      <motion.div layout className="m-4 rounded-lg flex gap-4">
+      <motion.div layout className="m-2 md:m-4 rounded-lg flex flex-row gap-2 md:gap-4">
         <div className="relative flex-grow">
           <input
-            className="w-full bg-gradient-to-r bg-slate-800 focus:bg-slate-700 p-6 rounded-lg text-white outline-none transition duration-500 text-3xl shadow"
+            className="w-full bg-gradient-to-r bg-slate-800 focus:bg-slate-700 p-3 md:p-6 rounded-lg text-white outline-none transition duration-500 text-2xl md:text-3xl shadow"
             value={state}
             onChange={(e) => setState(e.target.value)}
             onKeyPress={handleSubmit}
@@ -37,15 +37,15 @@ export default function Input(props) {
             onClick={() => inputRef.current && inputRef.current.focus()}
             layout
             htmlFor="item name"
-            className={`absolute text-slate-500 top-0 left-0 m-6 transition-all duration-200 cursor-text ${
-              state.length > 0 ? "text-sm mt-2" : "text-3xl mt-6"
+            className={`absolute text-slate-500 top-0 left-0 m-3 md:m-6 transition-all duration-200 cursor-text ${
+              state.length > 0 ? "text-xs md:text-sm mt-px md:mt-1" : "text-2xl md:text-3xl mt-3 md:mt-6"
             }`}
           >
             Enter item name:
           </motion.label>
         </div>
         <button
-          className="bg-gradient-to-tr from-teal-400 to-violet-500 rounded-lg px-10 text-3xl text-white font-bold transform scale-100 hover:scale-95 active:scale-100 transition duration-250 shadow hover:shadow-sm active:shadow-md"
+          className="basis-44 w-auto text-center bg-gradient-to-tr from-teal-400 to-violet-500 rounded-lg px-1 md:px-10 text-3xl text-white font-bold transform scale-100 hover:scale-95 active:scale-100 transition duration-250 shadow hover:shadow-sm active:shadow-md"
           onClick={handleSubmit}
         >
           Enter

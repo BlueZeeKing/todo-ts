@@ -69,7 +69,7 @@ export default function Home(props) {
               staggerChildren: 0.5,
             }}
             layout
-            className="bg-gradient-to-r from-slate-700 to-slate-800 m-4 p-6 rounded-lg shadow flex flex-row"
+            className="bg-gradient-to-r from-slate-700 to-slate-800 m-2 p-3 md:m-4 md:p-6 rounded-lg shadow flex flex-row"
             key={item.uuid}
           >
             <Checkmark onChange={() => updateDone(index)} value={item.done} />

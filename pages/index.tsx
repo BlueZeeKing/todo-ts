@@ -26,6 +26,18 @@ const itemAnimation = {
 export default function Home(props) {
   const [state, setState] = useState<Item[]>([])
 
+  useEffect(() => {
+    if (window.localStorage.getItem("todolist-data") !== null) {
+      setState(JSON.parse(window.localStorage.getItem("todolist-data")));
+    }
+  }, [])
+
+  useEffect(() => {
+    if (state.length > 0) {
+      window.localStorage.setItem("todolist-data", JSON.stringify(state));
+    }
+  })
+
   const updateDone = (index:number) => {
     let stateCopy = [...state]
     stateCopy[index].done = !stateCopy[index].done;

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { nanoid } from "nanoid";
 import { motion } from "framer-motion";
+import Head from "next/head";
 
 import Checkmark from "../components/Checkmark";
 import Input from "../components/Input";
@@ -55,6 +56,9 @@ export default function Home(props) {
 
   return (
     <>
+      <Head>
+        <title>Todo.ts</title>
+      </Head>
       <h1 className="py-16 text-center text-7xl font-bold text-white bg-gradient-to-br from-cyan-500 to-fuchsia-500">
         Todo.ts
       </h1>
@@ -76,7 +80,7 @@ export default function Home(props) {
             <p
               className={`after:content-[""] ${
                 item.done ? "after:w-[calc(100%+20px)]" : "after:w-0"
-              } after:transition-all duration-200 after:absolute after:bg-gray-600 after:left-0 after:top-[calc(50%-0.125rem)] after:ml-[-10px] after:h-[0.2rem] relative text-3xl transition duration-200 ${
+              } after:transition-all after:absolute after:bg-gray-600 after:left-0 after:top-[calc(50%-0.125rem)] after:ml-[-10px] after:h-[0.2rem] relative text-3xl transition duration-200 ${
                 item.done ? "text-gray-500" : "text-white"
               }`}
             >
@@ -95,6 +99,7 @@ export default function Home(props) {
           </motion.div>
         ))}
       <Input onSubmit={(value: string) => addItem(value)} />
+      <div className="p-12"></div>
     </>
   );
 }

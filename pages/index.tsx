@@ -3,11 +3,12 @@ import { nanoid } from "nanoid";
 import { motion } from "framer-motion";
 
 import Checkmark from "../components/Checkmark";
+import Input from "../components/Input";
 
 interface Item {
   name: string,
   done: boolean,
-  uuid: string
+  uuid: string,
 }
 
 const itemAnimation = {
@@ -57,50 +58,43 @@ export default function Home(props) {
       <h1 className="py-16 text-center text-7xl font-bold text-white bg-gradient-to-br from-cyan-500 to-fuchsia-500">
         Todo.ts
       </h1>
-      {state.map((item: Item, index) => (
-        <motion.div
-          variants={itemAnimation}
-          initial="hidden"
-          animate="show"
-          transition={{
-            staggerChildren: 0.5,
-          }}
-          layout
-          className="bg-gradient-to-r from-slate-700 to-slate-800 m-4 p-6 rounded-lg shadow flex flex-row"
-          key={item.uuid}
-        >
-          <Checkmark onChange={() => updateDone(index)} value={item.done} />
-          <p className="text-3xl text-white flex-grow">{item.name}</p>
-          <p
-            className="text-3xl text-fuchsia-500 cursor-pointer"
-            onClick={() => removeItem(index)}
+      {state
+        .sort((a, b) => +a.done - +b.done)
+        .map((item: Item, index) => (
+          <motion.div
+            variants={itemAnimation}
+            initial="hidden"
+            animate="show"
+            transition={{
+              staggerChildren: 0.5,
+            }}
+            layout
+            className="bg-gradient-to-r from-slate-700 to-slate-800 m-4 p-6 rounded-lg shadow flex flex-row"
+            key={item.uuid}
           >
-            Delete
-          </p>
-        </motion.div>
-      ))}
-      <Input onSubmit={(value:string) => addItem(value)} />
+            <Checkmark onChange={() => updateDone(index)} value={item.done} />
+            <p
+              className={`after:content-[""] ${
+                item.done ? "after:w-[calc(100%+20px)]" : "after:w-0"
+              } after:transition-all duration-200 after:absolute after:bg-gray-600 after:left-0 after:top-[calc(50%-0.125rem)] after:ml-[-10px] after:h-[0.2rem] relative text-3xl transition duration-200 ${
+                item.done ? "text-gray-500" : "text-white"
+              }`}
+            >
+              {item.name}
+            </p>
+            <span className="flex-grow"></span>
+            <button
+              className="text-3xl text-fuchsia-500 active:text-fuchsia-400 transition duration-200 cursor-pointer"
+              onClick={() => removeItem(index)}
+              tabIndex={0}
+              role="button"
+              aria-label="task completed"
+            >
+              Delete
+            </button>
+          </motion.div>
+        ))}
+      <Input onSubmit={(value: string) => addItem(value)} />
     </>
-  );
-}
-
-function Input(props) {
-  const [state, setState] = useState("")
-
-  return (
-    <motion.div layout className="m-4 rounded-lg flex gap-4">
-      <input
-        className="w-0 flex-grow bg-gradient-to-r bg-slate-800 focus:bg-slate-700 p-6 rounded-lg text-white outline-none transition duration-500 text-3xl shadow"
-        value={state}
-        onChange={(e) => setState(e.target.value)}
-        onKeyPress={(e) => (e.key == "Enter" ? props.onSubmit(state) : "")}
-      />
-      <button
-        className="bg-gradient-to-tr from-teal-400 to-violet-500 rounded-lg px-10 text-3xl text-white font-bold transform scale-100 hover:scale-95 active:scale-100 transition duration-250 shadow hover:shadow-sm active:shadow-md"
-        onClick={() => props.onSubmit(state)}
-      >
-        Enter
-      </button>
-    </motion.div>
   );
 }

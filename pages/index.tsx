@@ -5,6 +5,20 @@ import Head from "next/head";
 
 import Checkmark from "../components/Checkmark";
 import Input from "../components/Input";
+import Modal from "../components/Modal";
+
+import { initializeApp } from "firebase/app";
+import { getAuth, GoogleAuthProvider, onAuthStateChanged, User } from "firebase/auth";
+import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAre_ZQ0KzQs6D2av2D9GC9Iax4xvdUuzY",
+  authDomain: "todots-4aedc.firebaseapp.com",
+  projectId: "todots-4aedc",
+  storageBucket: "todots-4aedc.appspot.com",
+  messagingSenderId: "625564911126",
+  appId: "1:625564911126:web:0c23d0b0f520d823855737",
+};
 
 interface Item {
   name: string,
@@ -25,18 +39,39 @@ const itemAnimation = {
   },
 };
 
+const app = initializeApp(firebaseConfig);
+const auth = getAuth();
+const provider = new GoogleAuthProvider();
+const db = getFirestore(app);
+
 export default function Home(props) {
   const [state, setState] = useState<Item[]>([])
+  const [user, setUser] = useState<User>(undefined);
+  const [signInDetermined, setSignIn] = useState(false);
 
   useEffect(() => {
-    if (window.localStorage.getItem("todolist-data") !== null) {
-      setState(JSON.parse(window.localStorage.getItem("todolist-data")));
-    }
+    return onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+        setSignIn(true);
+        const docRef = doc(db, "users", user.uid);
+        getDoc(docRef).then((docSnap) => {
+          if (docSnap.exists()) {
+            setState(docSnap.data().items);
+          } else {
+            console.log("No such document!");
+          }
+        });
+      } else {
+        setUser(null);
+        setSignIn(true);
+      }
+    });
   }, [])
 
   useEffect(() => {
-    if (state.length > 0) {
-      window.localStorage.setItem("todolist-data", JSON.stringify(state));
+    if (user && state.length > 0) {
+      setDoc(doc(db, "users", user.uid), { items: state });
     }
   })
 
@@ -59,6 +94,7 @@ export default function Home(props) {
       <Head>
         <title>Todo.ts</title>
       </Head>
+      {!user && signInDetermined ? <Modal auth={auth} provider={provider} /> : ""}
       <h1 className="py-16 text-center text-7xl font-bold text-white bg-gradient-to-br from-cyan-500 to-fuchsia-500">
         Todo.ts
       </h1>
